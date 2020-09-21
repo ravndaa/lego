@@ -1,7 +1,10 @@
 package domainnameshop
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/go-acme/lego/v4/platform/tester"
 	"github.com/stretchr/testify/require"
@@ -14,23 +17,22 @@ var envTest = tester.NewEnvTest(
 	EnvSecret).
 	WithDomain(envDomain)
 
-	/*
-		func setup() (*DNSProvider, *http.ServeMux, func()) {
-			handler := http.NewServeMux()
-			server := httptest.NewServer(handler)
+func setup() (*DNSProvider, *http.ServeMux, func()) {
+	handler := http.NewServeMux()
+	server := httptest.NewServer(handler)
 
-			config := NewDefaultConfig()
-			config.Token = "TOKEN"
-			config.Secret = "SECRET"
+	config := NewDefaultConfig()
+	config.Token = "TOKEN"
+	config.Secret = "SECRET"
+	//config.Endpoint = endpoint
 
-			provider, err := NewDNSProviderConfig(config)
-			if err != nil {
-				panic(err)
-			}
+	provider, err := NewDNSProviderConfig(config)
+	if err != nil {
+		panic(err)
+	}
 
-			return provider, handler, server.Close
-		}
-	*/
+	return provider, handler, server.Close
+}
 
 func TestNewDNSProvider(t *testing.T) {
 	testCases := []struct {
@@ -139,4 +141,32 @@ func TestNewDNSProviderConfig(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLivePresent(t *testing.T) {
+	if !envTest.IsLiveTest() {
+		t.Skip("skipping live test")
+	}
+
+	envTest.RestoreEnv()
+	provider, err := NewDNSProvider()
+	require.NoError(t, err)
+
+	err = provider.Present(envTest.GetDomain(), "", "123d==")
+	require.NoError(t, err)
+}
+
+func TestLiveCleanUp(t *testing.T) {
+	if !envTest.IsLiveTest() {
+		t.Skip("skipping live test")
+	}
+
+	envTest.RestoreEnv()
+	provider, err := NewDNSProvider()
+	require.NoError(t, err)
+
+	time.Sleep(1 * time.Second)
+
+	err = provider.CleanUp(envTest.GetDomain(), "", "123d==")
+	require.NoError(t, err)
 }

@@ -22,7 +22,7 @@ const (
 	errErrorStatusCode     = "domainnameshop: statuscode higher then 299, which is not ok"
 )
 
-//DNSRecord ...
+// dnsRecord ...
 type dnsRecord struct {
 	ID   int    `json:"id,omitempty"`
 	Host string `json:"host,omitempty"`
@@ -31,8 +31,8 @@ type dnsRecord struct {
 	Data string `json:"data,omitempty"`
 }
 
+// findDomain ...
 func (d *DNSProvider) findDomain(domainname string) (*dnsDomain, error) {
-
 	url := fmt.Sprintf("%v%v", defaultBaseURL, "/domains")
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -76,8 +76,8 @@ func (d *DNSProvider) findDomain(domainname string) (*dnsDomain, error) {
 	return nil, fmt.Errorf(errDomainNotFound)
 }
 
+// addTxtRecord ...
 func (d *DNSProvider) addTxtRecord(domainname, txtRecord string) error {
-
 	domain, err := d.findDomain(domainname)
 	if err != nil {
 		return err
@@ -94,7 +94,10 @@ func (d *DNSProvider) addTxtRecord(domainname, txtRecord string) error {
 	}
 
 	payload := new(bytes.Buffer)
-	json.NewEncoder(payload).Encode(data)
+	err = json.NewEncoder(payload).Encode(data)
+	if err != nil {
+		return err
+	}
 
 	req, err := http.NewRequest("POST", url, payload)
 	if err != nil {
@@ -117,6 +120,7 @@ func (d *DNSProvider) addTxtRecord(domainname, txtRecord string) error {
 	return nil
 }
 
+// findAcmeRecords ...
 func (d *DNSProvider) findAcmeRecords(domainname string) (*[]dnsRecord, error) {
 	domain, err := d.findDomain(domainname)
 	if err != nil {
@@ -154,8 +158,8 @@ func (d *DNSProvider) findAcmeRecords(domainname string) (*[]dnsRecord, error) {
 	return &records, nil
 }
 
+// delteTXTRecords ...
 func (d *DNSProvider) deleteTXTRecords(domainname string) error {
-
 	domain, err := d.findDomain(domainname)
 	if err != nil {
 		return err
