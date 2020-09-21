@@ -1,0 +1,21 @@
+Name = "Domainnameshop DNS"
+Description = ''''''
+URL = "https://www.domainname.shop/"
+Code = "domainnameshop"
+Since = "v0.0.1"
+
+Example = ''''''
+
+[Configuration]
+  [Configuration.Credentials]
+    DOMAINNAMESHOP_TOKEN = "Account token"
+    DOMAINNAMESHOP_SECRET = "Account secret"
+  [Configuration.Additional]
+    DOMAINNAMESHOP_POLLING_INTERVAL = "Time between DNS propagation check"
+    DOMAINNAMESHOP_PROPAGATION_TIMEOUT = "Maximum waiting time for DNS propagation"
+    DOMAINNAMESHOP_TTL = "The TTL of the TXT record used for the DNS challenge"
+    DOMAINNAMESHOP_HTTP_TIMEOUT = "API request timeout"
+    DOMAINNAMESHOP_SEQUENCE_INTERVAL = "Interval between iteration"
+
+[Links]
+  API = "https://api.domeneshop.no/docs/"

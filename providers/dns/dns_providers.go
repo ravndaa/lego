@@ -27,6 +27,7 @@ import (
 	"github.com/go-acme/lego/v4/providers/dns/dnsmadeeasy"
 	"github.com/go-acme/lego/v4/providers/dns/dnspod"
 	"github.com/go-acme/lego/v4/providers/dns/dode"
+	"github.com/go-acme/lego/v4/providers/dns/domainnameshop"
 	"github.com/go-acme/lego/v4/providers/dns/dreamhost"
 	"github.com/go-acme/lego/v4/providers/dns/duckdns"
 	"github.com/go-acme/lego/v4/providers/dns/dyn"
@@ -243,6 +244,8 @@ func NewDNSChallengeProviderByName(name string) (challenge.Provider, error) {
 		return zoneee.NewDNSProvider()
 	case "zonomi":
 		return zonomi.NewDNSProvider()
+	case "domainnameshop":
+		return domainnameshop.NewDNSProvider()
 	default:
 		return nil, fmt.Errorf("unrecognized DNS provider: %s", name)
 	}
