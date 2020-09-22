@@ -1,8 +1,6 @@
 package domainnameshop
 
 import (
-	"net/http"
-	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -14,25 +12,7 @@ const envDomain = envNamespace + "DOMAIN"
 
 var envTest = tester.NewEnvTest(
 	EnvToken,
-	EnvSecret).
-	WithDomain(envDomain)
-
-func setup() (*DNSProvider, *http.ServeMux, func()) {
-	handler := http.NewServeMux()
-	server := httptest.NewServer(handler)
-
-	config := NewDefaultConfig()
-	config.Token = "TOKEN"
-	config.Secret = "SECRET"
-	//config.Endpoint = endpoint
-
-	provider, err := NewDNSProviderConfig(config)
-	if err != nil {
-		panic(err)
-	}
-
-	return provider, handler, server.Close
-}
+	EnvSecret).WithDomain(envDomain)
 
 func TestNewDNSProvider(t *testing.T) {
 	testCases := []struct {
